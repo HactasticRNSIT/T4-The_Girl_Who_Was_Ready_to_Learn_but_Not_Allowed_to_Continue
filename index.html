@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Girl Child Education Risk Platform</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eaf0ed;
+    margin: 0;
+    color: #17211d;
+  }
+
+  .nav {
+    background: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #d9e3df;
+  }
+
+  .nav button {
+    border: none;
+    background: #f3f7f5;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .page {
+    display: none;
+    padding: 30px;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #d9e3df;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  button.submit {
+    background: #1d9e75;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f3f7f5;
+    border-left: 5px solid #1d9e75;
+  }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <h3>EduRisk India</h3>
+  <div>
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('analyzer')">Risk Analyzer</button>
+    <button onclick="showPage('regional')">Regional Data</button>
+  </div>
+</div>
+
+<div id="dashboard" class="page active">
+  <div class="card">
+    <h1>Girl Child Education Risk Platform</h1>
+    <p>This platform helps identify dropout risk for girl child education.</p>
+  </div>
+
+  <div class="card">
+    <h2>Dashboard</h2>
+    <p>Total Assessments: <span id="total">0</span></p>
+    <p>High Risk Cases: <span id="high">0</span></p>
+    <p>Medium Risk Cases: <span id="medium">0</span></p>
+    <p>Low Risk Cases: <span id="low">0</span></p>
+  </div>
+</div>
+
+<div id="analyzer" class="page">
+  <div class="card">
+    <h2>Student Risk Analyzer</h2>
+
+    <label>Student Name</label>
+    <input type="text" id="name" placeholder="Enter student name">
+
+    <label>Attendance Percentage</label>
+    <input type="number" id="attendance" placeholder="Enter attendance">
+
+    <label>Household Income</label>
+    <select id="income">
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+
+    <label>Scholarship Access</label>
+    <select id="scholarship">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+
+    <label>Transportation Problem</label>
+    <select id="transport">
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <label>Early Marriage Risk</label>
+    <select id="marriage">
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <button class="submit" onclick="analyzeRisk()">Analyze Risk</button>
+
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+</div>
+
+<div id="regional" class="page">
+  <div class="card">
+    <h2>Regional Education Data</h2>
+    <table border="1" width="100%" cellpadding="10">
+      <tr>
+        <th>Region</th>
+        <th>Main Problem</th>
+        <th>Dropout Risk</th>
+      </tr>
+      <tr>
+        <td>Rural Village</td>
+        <td>Early marriage, poverty, distance to school</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td>Urban City</td>
+        <td>Education cost, stress</td>
+        <td>Low</td>
+      </tr>
+      <tr>
+        <td>Tribal Region</td>
+        <td>Financial problems, transport, language barrier</td>
+        <td>High</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script>
+  let total = 0;
+  let high = 0;
+  let medium = 0;
+  let low = 0;
+
+  function showPage(pageId) {
+    let pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(page) {
+      page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+  }
+
+  function analyzeRisk() {
+    let attendance = Number(document.getElementById("attendance").value);
+    let income = document.getElementById("income").value;
+    let scholarship = document.getElementById("scholarship").value;
+    let transport = document.getElementById("transport").value;
+    let marriage = document.getElementById("marriage").value;
+
+    let score = 0;
+
+    if (attendance < 60) {
+      score += 35;
+    } else if (attendance < 75) {
+      score += 20;
+    }
+
+    if (income === "Low") {
+      score += 20;
+    }
+
+    if (scholarship === "No") {
+      score += 15;
+    }
+
+    if (transport === "Yes") {
+      score += 15;
+    }
+
+    if (marriage === "Yes") {
+      score += 25;
+    }
+
+    let level = "";
+    let color = "";
+
+    if (score >= 70) {
+      level = "HIGH RISK";
+      color = "red";
+      high++;
+    } else if (score >= 40) {
+      level = "MEDIUM RISK";
+      color = "orange";
+      medium++;
+    } else {
+      level = "LOW RISK";
+      color = "green";
+      low++;
+    }
+
+    total++;
+
+    document.getElementById("total").innerText = total;
+    document.getElementById("high").innerText = high;
+    document.getElementById("medium").innerText = medium;
+    document.getElementById("low").innerText = low;
+
+    let resultBox = document.getElementById("result");
+    resultBox.style.display = "block";
+    resultBox.style.borderLeftColor = color;
+    resultBox.innerHTML = `
+      <h3 style="color:${color};">${level}</h3>
+      <p>Risk Score: ${score}/100</p>
+      <p>Recommendation: Provide counseling, scholarship support, transport help, and family awareness if needed.</p>
+    `;
+  }
+</script>
+
+</body>
+</html>
