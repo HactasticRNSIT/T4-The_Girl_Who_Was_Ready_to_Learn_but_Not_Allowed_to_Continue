@@ -1,255 +1,576 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Girl Child Education Risk Platform</title>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-  
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #eaf0ed;
-    margin: 0;
-    color: #17211d;
-  }
-
-  .nav {
-    background: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #d9e3df;
-  }
-
-  .nav button {
-    border: none;
-    background: #f3f7f5;
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  .page {
-    display: none;
-    padding: 30px;
-    max-width: 1000px;
-    margin: auto;
-  }
-
-  .page.active {
-    display: block;
-  }
-
-  .card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #d9e3df;
-  }
-
-  input, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-  }
-
-  button.submit {
-    background: #1d9e75;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  .result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f3f7f5;
-    border-left: 5px solid #1d9e75;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-tertiary)}
+.nav{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500}
+.nav-brand i{font-size:20px;color:#1D9E75}
+.nav-tabs{display:flex;gap:4px}
+.tab-btn{background:none;border:none;padding:8px 16px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;border-radius:var(--border-radius-md);transition:all .15s}
+.tab-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.tab-btn:hover:not(.active){background:var(--color-background-secondary)}
+.page{display:none;padding:2rem;max-width:1100px;margin:0 auto}
+.page.active{display:block}
+.hero{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem 2.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:2rem;text-align:left}
+.hero-icon{width:56px;height:56px;background:#E1F5EE;border-radius:var(--border-radius-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-icon i{font-size:28px;color:#1D9E75}
+.hero-text{flex:1}
+.hero h1{font-size:24px;font-weight:600;margin-bottom:8px;line-height:1.3;letter-spacing:-0.3px}
+.hero p{font-size:14px;color:var(--color-text-secondary);line-height:1.6;max-width:680px}
+.metric-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.metric-val{font-size:24px;font-weight:500}
+.metric-val.red{color:#A32D2D}
+.metric-val.amber{color:#854F0B}
+.metric-val.green{color:#3B6D11}
+.section-title{font-size:16px;font-weight:500;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.section-title i{font-size:18px;color:var(--color-text-secondary)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.5rem}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:13px;color:var(--color-text-secondary);font-weight:500}
+select,input[type=number],input[type=text]{width:100%;padding:8px 12px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);height:36px}
+select:focus,input:focus{outline:none;box-shadow:0 0 0 2px #9FE1CB}
+.submit-btn{background:#1D9E75;color:#fff;border:none;padding:10px 28px;font-size:14px;font-weight:500;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:8px;margin-top:8px;transition:background .15s}
+.submit-btn:hover{background:#0F6E56}
+.submit-btn:active{transform:scale(.98)}
+.result-box{display:none;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-top:1.5rem;border-left:4px solid #ccc}
+.result-box.show{display:block}
+.result-level{font-size:20px;font-weight:500;margin-bottom:8px}
+.result-score{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}
+.factors-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.factors-list li{font-size:13px;display:flex;align-items:flex-start;gap:8px}
+.factors-list li i{font-size:14px;color:#E24B4A;margin-top:2px;flex-shrink:0}
+.rec-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:1rem;font-size:13px;line-height:1.6}
+.rec-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px}
+.regional-table{width:100%;border-collapse:collapse;font-size:13px}
+.regional-table th{text-align:left;padding:10px 12px;font-weight:500;font-size:12px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.regional-table td{padding:12px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.5}
+.regional-table tr:last-child td{border-bottom:none}
+.regional-table tr:hover td{background:var(--color-background-secondary)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-high{background:#E1F5EE;color:#085041}
+.badge-medium{background:#FAEEDA;color:#633806}
+.badge-low{background:#FCEBEB;color:#791F1F}
+.badge-mhigh{background:#FAEEDA;color:#633806}
+.badge-mlow{background:#FAEEDA;color:#633806}
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem}
+.insight-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem}
+.insight-card h3{font-size:14px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.insight-card h3 i{font-size:16px;color:#1D9E75}
+.insight-card .region-tag{font-size:11px;color:var(--color-text-secondary);margin-bottom:8px}
+.insight-card p{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.insight-card .scenario{font-size:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;margin-top:8px;color:var(--color-text-secondary);border-left:3px solid #9FE1CB}
+.chart-wrap{position:relative;width:100%;height:260px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}}
 </style>
 
-</head>
-<body>
+<h2 class="sr-only">Girl Child Education Risk Platform — Dropout risk analyzer and regional insights dashboard</h2>
+
 <div class="nav">
-  <h3>EduRisk India</h3>
-  <div>
-    <button onclick="showPage('dashboard')">Dashboard</button>
-    <button onclick="showPage('analyzer')">Risk Analyzer</button>
-    <button onclick="showPage('regional')">Regional Data</button>
+  <div class="nav-brand">
+    <i class="ti ti-school" aria-hidden="true"></i>
+    <span>EduRisk India</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('home')"><i class="ti ti-layout-dashboard" style="font-size:14px;margin-right:4px" aria-hidden="true"></i>Dashboard</button>
+    <button class="tab-btn" onclick="showPage('analyze')"><i class="ti ti-user-check" style="font-size:14px;margin-right:4px" aria-hidden="true"></i>Risk Analyzer</button>
+    <button class="tab-btn" onclick="showPage('regional')"><i class="ti ti-map-pin" style="font-size:14px;margin-right:4px" aria-hidden="true"></i>Regional Data</button>
+    <button class="tab-btn" onclick="showPage('insights')"><i class="ti ti-bulb" style="font-size:14px;margin-right:4px" aria-hidden="true"></i>Insights</button>
   </div>
 </div>
 
-<div id="dashboard" class="page active">
-  <div class="card">
-    <h1>Girl Child Education Risk Platform</h1>
-    <p>This platform helps identify dropout risk for girl child education.</p>
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-icon"><i class="ti ti-heart-handshake" aria-hidden="true"></i></div>
+    <div class="hero-text">
+      <h1>Girl Child Education Risk Platform</h1>
+      <p>A data-driven tool to identify dropout risk, understand regional barriers, and guide targeted interventions for girl child education across India.</p>
+    </div>
   </div>
-
-  <div class="card">
-    <h2>Dashboard</h2>
-    <p>Total Assessments: <span id="total">0</span></p>
-    <p>High Risk Cases: <span id="high">0</span></p>
-    <p>Medium Risk Cases: <span id="medium">0</span></p>
-    <p>Low Risk Cases: <span id="low">0</span></p>
+  <div class="metric-row">
+    <div class="metric"><div class="metric-label">Total Assessments</div><div class="metric-val" id="m-total">0</div></div>
+    <div class="metric"><div class="metric-label">High Risk Cases</div><div class="metric-val red" id="m-high">0</div></div>
+    <div class="metric"><div class="metric-label">Medium Risk</div><div class="metric-val amber" id="m-medium">0</div></div>
+    <div class="metric"><div class="metric-label">Low Risk</div><div class="metric-val green" id="m-low">0</div></div>
   </div>
-</div>
-
-<div id="analyzer" class="page">
+  <div class="two-col">
+    <div class="card">
+      <div class="section-title"><i class="ti ti-chart-pie" aria-hidden="true"></i>Risk Distribution</div>
+      <div class="chart-wrap"><canvas id="riskChart" role="img" aria-label="Pie chart showing risk distribution across analyzed students">No assessments yet.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Top Risk Factors Across India</div>
+      <div id="factor-bars" style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
+        <div style="font-size:13px;color:var(--color-text-secondary)">Run assessments to see top factors</div>
+      </div>
+    </div>
+  </div>
   <div class="card">
-    <h2>Student Risk Analyzer</h2>
-
-    <label>Student Name</label>
-    <input type="text" id="name" placeholder="Enter student name">
-
-    <label>Attendance Percentage</label>
-    <input type="number" id="attendance" placeholder="Enter attendance">
-
-    <label>Household Income</label>
-    <select id="income">
-      <option value="High">High</option>
-      <option value="Medium">Medium</option>
-      <option value="Low">Low</option>
-    </select>
-
-    <label>Scholarship Access</label>
-    <select id="scholarship">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-
-    <label>Transportation Problem</label>
-    <select id="transport">
-      <option value="No">No</option>
-      <option value="Yes">Yes</option>
-    </select>
-
-    <label>Early Marriage Risk</label>
-    <select id="marriage">
-      <option value="No">No</option>
-      <option value="Yes">Yes</option>
-    </select>
-
-    <button class="submit" onclick="analyzeRisk()">Analyze Risk</button>
-
-    <div id="result" class="result" style="display:none;"></div>
+    <div class="section-title"><i class="ti ti-clock-hour-4" aria-hidden="true"></i>Recent Submissions</div>
+    <div id="recent-list" style="font-size:13px;color:var(--color-text-secondary)">No submissions yet. Use the Risk Analyzer to add records.</div>
   </div>
 </div>
 
-<div id="regional" class="page">
+<div id="page-analyze" class="page">
   <div class="card">
-    <h2>Regional Education Data</h2>
-    <table border="1" width="100%" cellpadding="10">
-      <tr>
-        <th>Region</th>
-        <th>Main Problem</th>
-        <th>Dropout Risk</th>
-      </tr>
-      <tr>
-        <td>Rural Village</td>
-        <td>Early marriage, poverty, distance to school</td>
-        <td>High</td>
-      </tr>
-      <tr>
-        <td>Urban City</td>
-        <td>Education cost, stress</td>
-        <td>Low</td>
-      </tr>
-      <tr>
-        <td>Tribal Region</td>
-        <td>Financial problems, transport, language barrier</td>
-        <td>High</td>
-      </tr>
+    <div class="section-title"><i class="ti ti-clipboard-check" aria-hidden="true"></i>Student Risk Assessment</div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem">Fill in the student's details to calculate dropout risk score and get intervention recommendations.</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Education Stage</label>
+        <select id="f-stage">
+          <option value="Primary">Primary (Class 1–5)</option>
+          <option value="Middle">Middle (Class 6–8)</option>
+          <option value="Secondary">Secondary (Class 9–10)</option>
+          <option value="College Transition">College Transition (11–12+)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Attendance Level</label>
+        <select id="f-attendance" onchange="toggleAttendancePanel()">
+          <option value="High">High (75% and above)</option>
+          <option value="Low">Low (below 75%)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Household Income Level</label>
+        <select id="f-income">
+          <option value="High">High</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Father's Education Level</label>
+        <select id="f-father-edu">
+          <option value="No Formal Education">No Formal Education</option>
+          <option value="Primary">Primary (up to Class 5)</option>
+          <option value="Middle" selected>Middle (up to Class 8)</option>
+          <option value="Secondary">Secondary (Class 10)</option>
+          <option value="Higher Secondary">Higher Secondary (Class 12)</option>
+          <option value="Graduate">Graduate & above</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mother's Education Level</label>
+        <select id="f-mother-edu">
+          <option value="No Formal Education">No Formal Education</option>
+          <option value="Primary">Primary (up to Class 5)</option>
+          <option value="Middle" selected>Middle (up to Class 8)</option>
+          <option value="Secondary">Secondary (Class 10)</option>
+          <option value="Higher Secondary">Higher Secondary (Class 12)</option>
+          <option value="Graduate">Graduate & above</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Scholarship Access</label>
+        <select id="f-scholarship">
+          <option value="Yes">Yes</option>
+          <option value="No" selected>No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Early Marriage Risk</label>
+        <select id="f-marriage">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Transportation Barrier</label>
+        <select id="f-transport">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Caregiving Role at Home</label>
+        <select id="f-caregiving">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Safety Concerns</label>
+        <select id="f-safety">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Previous Dropout History</label>
+        <select id="f-dropout">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Region Type</label>
+        <select id="f-region" onchange="updateVillages()">
+          <option>Rural Village</option>
+          <option>Tribal Region</option>
+          <option>Semi-Urban Area</option>
+          <option>Urban City</option>
+          <option>Agricultural Region</option>
+          <option>Conservative Community Area</option>
+          <option>Coastal Region</option>
+          <option>Slum/Low-income Urban Area</option>
+          <option>Remote Hilly Area</option>
+          <option>Industrial Working-Class Area</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Village / Locality</label>
+        <select id="f-village">
+          <option value="">— Select village —</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Low Attendance Reasons Panel — shown instantly when Low is selected -->
+    <div id="low-attendance-panel" style="display:none;margin-top:16px;background:#FFF8EE;border:0.5px solid #F5C97A;border-left:4px solid #EF9F27;border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem">
+      <div style="font-size:13px;font-weight:600;color:#854F0B;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+        <i class="ti ti-alert-triangle" style="font-size:16px"></i>
+        Low Attendance Detected — Barriers Given by Society
+      </div>
+      <div style="font-size:12px;color:#9A6010;margin-bottom:14px;line-height:1.5;font-style:italic">
+        "These are the barriers that society places on girl children, preventing them from attending school regularly."
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #F5C97A;border-radius:var(--border-radius-md);padding:10px 12px">
+          <span style="width:28px;height:28px;background:#FDE9C2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><i class="ti ti-moon" style="font-size:13px;color:#854F0B"></i></span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#5C3A0A;margin-bottom:3px">Society will not allow her out during periods</div>
+            <div style="font-size:11px;color:#9A6010;line-height:1.6">Many girls miss 4–5 school days every month due to social taboos around menstruation. Communities often restrict girls from leaving home, severely impacting continuity of education.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #F5C97A;border-radius:var(--border-radius-md);padding:10px 12px">
+          <span style="width:28px;height:28px;background:#FDE9C2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><i class="ti ti-home" style="font-size:13px;color:#854F0B"></i></span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#5C3A0A;margin-bottom:3px">Household work and responsibilities</div>
+            <div style="font-size:11px;color:#9A6010;line-height:1.6">Girls are routinely burdened with cooking, cleaning, fetching water, and sibling care — duties rarely assigned to brothers — keeping them home instead of in the classroom.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #F5C97A;border-radius:var(--border-radius-md);padding:10px 12px">
+          <span style="width:28px;height:28px;background:#FDE9C2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><i class="ti ti-building" style="font-size:13px;color:#854F0B"></i></span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#5C3A0A;margin-bottom:3px">Lack of sanitation facilities in school</div>
+            <div style="font-size:11px;color:#9A6010;line-height:1.6">Schools without private, clean, gender-separate toilets make adolescent girls uncomfortable and unsafe — a leading cause of dropout, especially after puberty.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #F5C97A;border-radius:var(--border-radius-md);padding:10px 12px">
+          <span style="width:28px;height:28px;background:#FDE9C2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><i class="ti ti-tractor" style="font-size:13px;color:#854F0B"></i></span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#5C3A0A;margin-bottom:3px">Seasonal agricultural work with family</div>
+            <div style="font-size:11px;color:#9A6010;line-height:1.6">During sowing and harvesting seasons, girls are pulled from school to assist with farm labour. This recurring absenteeism often leads to permanent dropout over time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="analyze()"><i class="ti ti-analyze" aria-hidden="true"></i>Analyze Risk</button>
+
+    <div class="result-box" id="result-box">
+      <div class="result-level" id="res-level">—</div>
+      <div class="result-score" id="res-score">Score: —</div>
+      <ul class="factors-list" id="res-factors"></ul>
+      <div class="rec-label">Immediate Action</div>
+      <div class="rec-box" id="res-rec">—</div>
+      <div class="rec-label" style="margin-top:1rem">8-Point Intervention Recommendations</div>
+      <div id="res-detailed-recs" class="rec-box" style="padding:0"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-regional" class="page">
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--color-border-tertiary)">
+      <div class="section-title" style="margin:0"><i class="ti ti-map" aria-hidden="true"></i>Regional Education Data — India</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="regional-table">
+      <thead>
+        <tr>
+          <th>Region Type</th>
+          <th>Example Area</th>
+          <th>Dropout Rate</th>
+          <th>Primary Reason</th>
+          <th>Supporting Factors</th>
+          <th>Why Some Areas Do Better</th>
+          <th>Example Scenario</th>
+        </tr>
+      </thead>
+      <tbody id="regional-tbody"></tbody>
     </table>
+    </div>
   </div>
 </div>
+
+<div id="page-insights" class="page">
+  <div class="hero">
+    <div class="hero-icon"><i class="ti ti-chart-area" aria-hidden="true"></i></div>
+    <div class="hero-text">
+      <h1>Key Insights & Intervention Guide</h1>
+      <p>Understanding dropout patterns by region helps design targeted, high-impact interventions.</p>
+    </div>
+  </div>
+  <div class="section-title"><i class="ti ti-map-pin" aria-hidden="true"></i>Regional Profiles</div>
+  <div class="insight-grid" id="insight-grid"></div>
+  <div class="card">
+    <div class="section-title"><i class="ti ti-chart-bar" aria-hidden="true"></i>Dropout Rate by Region</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="regionChart" role="img" aria-label="Horizontal bar chart of dropout rates by region type">Dropout rates by region.</canvas></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-  let total = 0;
-  let high = 0;
-  let medium = 0;
-  let low = 0;
+const regionalData=[
+  {region:"Rural Village",example:"Rajasthan rural areas",dropout:"Low",studyLevel:"High",mainReason:"Early marriage",factors:"Poverty, traditional mindset, long distance to school",positive:"Government hostel facilities and awareness programs improve continuation",scenario:"Girl married at 16, stopped studies after 10th",dropoutPct:52},
+  {region:"Tribal Region",example:"Jharkhand tribal belt",dropout:"Low",studyLevel:"High",mainReason:"Financial problems",factors:"Parents daily wage workers, no transport, language barriers",positive:"NGO support and local-language teaching help girls continue",scenario:"Girl leaves school to support family income",dropoutPct:48},
+  {region:"Semi-Urban Area",example:"Karnataka town areas",dropout:"Medium",studyLevel:"Medium",mainReason:"Lack of safe transport",factors:"Parents worry about safety while traveling",positive:"Bus facilities and nearby colleges increase attendance",scenario:"Girl continues PU because college bus available",dropoutPct:30},
+  {region:"Urban City",example:"Bengaluru",dropout:"High",studyLevel:"Low",mainReason:"Competition stress sometimes",factors:"High cost of private education",positive:"Educated parents and career awareness",scenario:"Parents encourage engineering/medical studies",dropoutPct:10},
+  {region:"Agricultural Region",example:"Maharashtra villages",dropout:"Medium-Low",studyLevel:"Medium-High",mainReason:"Seasonal farm work",factors:"Girls help in farming and household work",positive:"Scholarships reduce dropout",scenario:"Girl absent during harvesting season",dropoutPct:40},
+  {region:"Conservative Community",example:"Parts of Uttar Pradesh",dropout:"Low",studyLevel:"High",mainReason:"Social norms and gender bias",factors:"Belief that girls only need marriage",positive:"Women role models increase motivation",scenario:"Parents stop education after puberty",dropoutPct:55},
+  {region:"Coastal Region",example:"Kerala",dropout:"High",studyLevel:"Low",mainReason:"Few dropout cases",factors:"Better literacy and healthcare systems",positive:"High female literacy awareness",scenario:"Girls commonly complete graduation",dropoutPct:8},
+  {region:"Slum/Low-income Urban",example:"Mumbai slums",dropout:"Medium-Low",studyLevel:"Medium",mainReason:"Economic pressure",factors:"Parents working all day, child care responsibilities",positive:"Free education schemes help",scenario:"Girl takes care of siblings instead of school",dropoutPct:38},
+  {region:"Remote Hilly Area",example:"North-East villages",dropout:"Medium",studyLevel:"Medium",mainReason:"Lack of nearby colleges",factors:"Travel difficulties and weather",positive:"Residential schools improve education",scenario:"Girl travels 20 km for higher secondary",dropoutPct:32},
+  {region:"Industrial Working-Class",example:"Gujarat industrial zones",dropout:"Medium",studyLevel:"Medium",mainReason:"Child labor and migration",factors:"Families frequently relocate",positive:"Stable income and school support reduce dropout",scenario:"Family migration interrupts studies",dropoutPct:28}
+];
 
-  function showPage(pageId) {
-    let pages = document.querySelectorAll(".page");
+const icons=["ti-home","ti-mountain","ti-building","ti-building-skyscraper","ti-plant","ti-users","ti-waves","ti-building-community","ti-trees","ti-tools"];
 
-    pages.forEach(function(page) {
-      page.classList.remove("active");
+const submissions=[];
+let riskChart=null;
+
+function badgeClass(d){
+  if(d==="High")return"badge-high";
+  if(d==="Medium")return"badge-medium";
+  if(d==="Low")return"badge-low";
+  if(d==="Medium-Low")return"badge-mlow";
+  if(d==="Medium-High")return"badge-mhigh";
+  return"badge-medium";
+}
+
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  const idx=['home','analyze','regional','insights'].indexOf(p);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if(p==='regional')buildTable();
+  if(p==='insights')buildInsights();
+  if(p==='home')updateDash();
+}
+
+function buildTable(){
+  const tb=document.getElementById('regional-tbody');
+  if(tb.children.length)return;
+  regionalData.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><strong>${r.region}</strong></td>
+      <td style="color:var(--color-text-secondary);font-size:12px">${r.example}</td>
+      <td><span class="badge ${badgeClass(r.dropout)}">${r.dropout} dropout</span></td>
+      <td>${r.mainReason}</td>
+      <td style="font-size:12px;color:var(--color-text-secondary);max-width:180px">${r.factors}</td>
+      <td style="font-size:12px;color:var(--color-text-secondary);max-width:180px">${r.positive}</td>
+      <td style="font-size:12px;font-style:italic;color:var(--color-text-secondary);max-width:160px">${r.scenario}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function buildInsights(){
+  const g=document.getElementById('insight-grid');
+  if(g.children.length>0&&!g.querySelector('.placeholder'))return;
+  g.innerHTML='';
+  regionalData.forEach((r,i)=>{
+    const c=document.createElement('div');
+    c.className='insight-card';
+    c.innerHTML=`
+      <h3><i class="ti ${icons[i]}" aria-hidden="true"></i>${r.region}</h3>
+      <div class="region-tag">${r.example}</div>
+      <p><strong style="font-weight:500">Main barrier:</strong> ${r.mainReason}</p>
+      <p style="margin-top:4px"><strong style="font-weight:500">Solution:</strong> ${r.positive}</p>
+      <div class="scenario"><i class="ti ti-quote" style="font-size:12px;margin-right:4px" aria-hidden="true"></i>${r.scenario}</div>`;
+    g.appendChild(c);
+  });
+
+  if(window._regionChart)window._regionChart.destroy();
+  const ctx=document.getElementById('regionChart').getContext('2d');
+  const labels=regionalData.map(r=>r.region);
+  const vals=regionalData.map(r=>r.dropoutPct);
+  const colors=vals.map(v=>v>=45?'#E24B4A':v>=30?'#EF9F27':'#1D9E75');
+  window._regionChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{label:'Dropout Rate %',data:vals,backgroundColor:colors,borderRadius:4}]},
+    options:{
+      indexAxis:'y',
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.x}% dropout rate`}}},
+      scales:{x:{max:65,ticks:{callback:v=>v+'%'},grid:{color:'rgba(128,128,128,0.1)'}},y:{ticks:{font:{size:11}}}},
+    }
+  });
+}
+
+function calculateRisk(data){
+  let score=0;const factors=[];
+  if(data.attendance_rate==="Low"){score+=25;factors.push("Low attendance (below 75%)");}
+  if(["Secondary","College Transition"].includes(data.education_stage)){score+=20;factors.push("High-risk transition stage: "+data.education_stage);}
+  if(data.scholarship_access==="No"){score+=15;factors.push("No scholarship access");}
+  if(data.early_marriage_risk==="Yes"){score+=20;factors.push("Early marriage risk identified");}
+  if(data.transport_barrier==="Yes"){score+=10;factors.push("Transportation barrier present");}
+  if(data.caregiving_role==="Yes"){score+=10;factors.push("Caregiving responsibilities at home");}
+  if(data.household_income==="Low"){score+=15;factors.push("Low household income");}
+  if(data.safety_concern==="Yes"){score+=15;factors.push("Safety concerns reported");}
+  if(data.dropout_history==="Yes"){score+=20;factors.push("Previous dropout history");}
+  if(["No Formal Education","Primary"].includes(data.father_edu)){score+=8;factors.push("Father has low/no formal education");}
+  if(["No Formal Education","Primary"].includes(data.mother_edu)){score+=8;factors.push("Mother has low/no formal education");}
+  score=Math.min(score,100);
+  let level,color,recommendation;
+  if(score>=70){level="HIGH RISK";color="#E24B4A";recommendation="Immediate intervention required. Assign a mentor, provide financial aid, and conduct a home visit.";}
+  else if(score>=40){level="MEDIUM RISK";color="#EF9F27";recommendation="Monitor closely. Offer counseling, transport support, and connect with scholarship programs.";}
+  else{level="LOW RISK";color="#1D9E75";recommendation="Student appears stable. Continue regular check-ins and encourage peer support networks.";}
+  return{score,level,color,factors,recommendation};
+}
+
+const villageMap={
+  "Rural Village":["Rampur Khas, Rajasthan","Baroli, Rajasthan","Dhani Khera, Haryana","Nangal Chaudhary, Haryana","Bassi, Rajasthan","Peelwa, Rajasthan"],
+  "Tribal Region":["Simdega, Jharkhand","Khunti, Jharkhand","Bastar, Chhattisgarh","Gumla, Jharkhand","Dantewada, Chhattisgarh","Narayanpur, Chhattisgarh"],
+  "Semi-Urban Area":["Tumkur, Karnataka","Mandya, Karnataka","Dharwad, Karnataka","Raichur, Karnataka","Hassan, Karnataka","Chikkaballapur, Karnataka"],
+  "Urban City":["Whitefield, Bengaluru","Yelahanka, Bengaluru","Koramangala, Bengaluru","Hebbal, Bengaluru","Electronic City, Bengaluru","Jayanagar, Bengaluru"],
+  "Agricultural Region":["Nashik Rural, Maharashtra","Solapur Village, Maharashtra","Latur, Maharashtra","Osmanabad, Maharashtra","Ahmednagar, Maharashtra","Beed, Maharashtra"],
+  "Conservative Community Area":["Azamgarh, Uttar Pradesh","Bahraich, Uttar Pradesh","Sitapur, Uttar Pradesh","Shravasti, Uttar Pradesh","Balrampur, Uttar Pradesh","Gonda, Uttar Pradesh"],
+  "Coastal Region":["Alappuzha, Kerala","Kozhikode, Kerala","Thrissur, Kerala","Kannur, Kerala","Malappuram, Kerala","Kasaragod, Kerala"],
+  "Slum/Low-income Urban Area":["Dharavi, Mumbai","Kurla East, Mumbai","Mankhurd, Mumbai","Govandi, Mumbai","Shivaji Nagar, Mumbai","Cheeta Camp, Mumbai"],
+  "Remote Hilly Area":["Mawlynnong, Meghalaya","Ziro, Arunachal Pradesh","Longding, Arunachal Pradesh","Ukhrul, Manipur","Phek, Nagaland","Tamenglong, Manipur"],
+  "Industrial Working-Class Area":["Vatva, Gujarat","Ankleshwar, Gujarat","Vapi, Gujarat","Morbi, Gujarat","Rajkot Industrial, Gujarat","Bharuch, Gujarat"]
+};
+
+function updateVillages(){
+  const region=document.getElementById('f-region').value;
+  const sel=document.getElementById('f-village');
+  const villages=villageMap[region]||[];
+  sel.innerHTML='<option value="">— Select village —</option>'+villages.map(v=>`<option value="${v}">${v}</option>`).join('');
+}
+
+
+function getDetailedRecs(data,risk){
+  const recs=[
+    {icon:"ti-school",title:"Regular School Monitoring",text:"Assign a dedicated school coordinator to track weekly attendance and flag absences within 2 days of occurrence."},
+    {icon:"ti-coin",title:"Financial Support & Scholarships",text:data.scholarship_access==="No"?"Immediately enroll the student in available government schemes: NSP, Kanya Sumangala, or state-specific scholarships.":"Ensure continued scholarship disbursement is not delayed. Explore additional support through NGO grants."},
+    {icon:"ti-bus",title:"Safe Transportation",text:data.transport_barrier==="Yes"?"Arrange school bus facility or cycle provision. Coordinate with local panchayat for group transport solutions.":"Maintain existing transport access and monitor safety of travel routes."},
+    {icon:"ti-users",title:"Community & Parent Engagement",text:`Conduct family counselling sessions with parents (Father: ${data.father_edu||'—'}, Mother: ${data.mother_edu||'—'} education level). Involve community leaders and women's self-help groups to reinforce education value.`},
+    {icon:"ti-heart",title:"Health & Menstrual Hygiene Support",text:"Ensure school has private, clean sanitation facilities. Provide menstrual hygiene kits. Establish a policy allowing girls to attend school comfortably during periods."},
+    {icon:"ti-shield-check",title:"Safety & Child Protection",text:data.safety_concern==="Yes"?"Immediately report safety concerns to the child welfare committee. Appoint a safe-school officer and create a confidential reporting mechanism.":"Conduct periodic safety audits of school routes. Train teachers on child protection protocols."},
+    {icon:"ti-ring",title:"Early Marriage Prevention",text:data.early_marriage_risk==="Yes"?"Engage CHILDLINE (1098) and local district child protection unit. Arrange awareness workshops for family and village council.":"Run periodic awareness sessions in the community about legal marriage age and girl's rights to education."},
+    {icon:"ti-mental-health",title:"Psychosocial Counselling",text:"Provide access to a trained counsellor at school or block level. Address academic stress, home pressures, and self-confidence. Connect with government Saathiya Resource Centres where available."}
+  ];
+  return recs;
+}
+
+const reasonNotes={};
+
+function toggleAttendancePanel(){
+  const val=document.getElementById('f-attendance').value;
+  document.getElementById('low-attendance-panel').style.display=val==='Low'?'block':'none';
+}
+
+function analyze(){
+  const data={
+    education_stage:document.getElementById('f-stage').value,
+    attendance_rate:document.getElementById('f-attendance').value,
+    household_income:document.getElementById('f-income').value,
+    father_edu:document.getElementById('f-father-edu').value,
+    mother_edu:document.getElementById('f-mother-edu').value,
+    scholarship_access:document.getElementById('f-scholarship').value,
+    early_marriage_risk:document.getElementById('f-marriage').value,
+    transport_barrier:document.getElementById('f-transport').value,
+    caregiving_role:document.getElementById('f-caregiving').value,
+    safety_concern:document.getElementById('f-safety').value,
+    dropout_history:document.getElementById('f-dropout').value,
+    region:document.getElementById('f-region').value,
+    village:document.getElementById('f-village').value
+  };
+  const risk=calculateRisk(data);
+  submissions.push({...data,name:data.village||data.region,risk,timestamp:new Date().toLocaleTimeString()});
+  const box=document.getElementById('result-box');
+  box.classList.add('show');
+  box.style.borderLeftColor=risk.color;
+  document.getElementById('res-level').textContent=risk.level;
+  document.getElementById('res-level').style.color=risk.color;
+  document.getElementById('res-score').textContent=`Risk Score: ${risk.score}/100 | Attendance: ${data.attendance_rate}`;
+  const fl=document.getElementById('res-factors');
+  fl.innerHTML=risk.factors.length?risk.factors.map(f=>`<li><i class="ti ti-alert-circle" aria-hidden="true"></i>${f}</li>`).join(''):'<li style="color:var(--color-text-secondary)">No significant risk factors identified.</li>';
+  document.getElementById('res-rec').textContent=risk.recommendation;
+  const detRecs=getDetailedRecs(data,risk);
+  document.getElementById('res-detailed-recs').innerHTML=detRecs.map((r,i)=>`
+    <div style="display:flex;gap:12px;padding:12px 14px;${i<detRecs.length-1?'border-bottom:0.5px solid var(--color-border-tertiary)':''}">
+      <div style="width:32px;height:32px;background:#E1F5EE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+        <i class="ti ${r.icon}" style="font-size:16px;color:#1D9E75" aria-hidden="true"></i>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px;color:var(--color-text-primary)">${i+1}. ${r.title}</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">${r.text}</div>
+      </div>
+    </div>`).join('');
+  updateDash();
+}
+
+function updateDash(){
+  const total=submissions.length;
+  const high=submissions.filter(s=>s.risk.score>=70).length;
+  const med=submissions.filter(s=>s.risk.score>=40&&s.risk.score<70).length;
+  const low=submissions.filter(s=>s.risk.score<40).length;
+  document.getElementById('m-total').textContent=total;
+  document.getElementById('m-high').textContent=high;
+  document.getElementById('m-medium').textContent=med;
+  document.getElementById('m-low').textContent=low;
+
+  if(total>0){
+    const ctx=document.getElementById('riskChart').getContext('2d');
+    if(riskChart)riskChart.destroy();
+    riskChart=new Chart(ctx,{
+      type:'doughnut',
+      data:{labels:['High Risk','Medium Risk','Low Risk'],datasets:[{data:[high,med,low],backgroundColor:['#E24B4A','#EF9F27','#1D9E75'],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
     });
-
-    document.getElementById(pageId).classList.add("active");
+    const fb=document.getElementById('factor-bars');
+    const fc={};
+    submissions.forEach(s=>s.risk.factors.forEach(f=>{fc[f]=(fc[f]||0)+1}));
+    const sorted=Object.entries(fc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const max=sorted[0]?.[1]||1;
+    fb.innerHTML=sorted.map(([f,c])=>`
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>${f}</span><span style="color:var(--color-text-secondary)">${c}</span></div>
+        <div style="height:6px;background:var(--color-background-secondary);border-radius:3px"><div style="height:6px;width:${Math.round(c/max*100)}%;background:#1D9E75;border-radius:3px"></div></div>
+      </div>`).join('');
   }
 
-  function analyzeRisk() {
-    let attendance = Number(document.getElementById("attendance").value);
-    let income = document.getElementById("income").value;
-    let scholarship = document.getElementById("scholarship").value;
-    let transport = document.getElementById("transport").value;
-    let marriage = document.getElementById("marriage").value;
+  const rl=document.getElementById('recent-list');
+  if(submissions.length===0){rl.innerHTML='<div style="font-size:13px;color:var(--color-text-secondary)">No submissions yet.</div>';return;}
+  const recent=submissions.slice(-5).reverse();
+  rl.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="border-bottom:0.5px solid var(--color-border-tertiary)">
+      <th style="text-align:left;padding:8px 0;font-weight:500;color:var(--color-text-secondary)">Name/ID</th>
+      <th style="text-align:left;padding:8px;font-weight:500;color:var(--color-text-secondary)">Region</th>
+      <th style="text-align:left;padding:8px;font-weight:500;color:var(--color-text-secondary)">Stage</th>
+      <th style="text-align:right;padding:8px 0;font-weight:500;color:var(--color-text-secondary)">Risk</th>
+    </tr></thead>
+    <tbody>${recent.map((s,i)=>`<tr style="border-bottom:0.5px solid var(--color-border-tertiary)">
+      <td style="padding:10px 0">${s.name||'Student '+(submissions.length-i)}</td>
+      <td style="padding:10px 8px;color:var(--color-text-secondary)">${s.region}</td>
+      <td style="padding:10px 8px;color:var(--color-text-secondary)">${s.education_stage}</td>
+      <td style="padding:10px 0;text-align:right"><span style="background:${s.risk.color}22;color:${s.risk.color};padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500">${s.risk.level}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
 
-    let score = 0;
-
-    if (attendance < 60) {
-      score += 35;
-    } else if (attendance < 75) {
-      score += 20;
-    }
-
-    if (income === "Low") {
-      score += 20;
-    }
-
-    if (scholarship === "No") {
-      score += 15;
-    }
-
-    if (transport === "Yes") {
-      score += 15;
-    }
-
-    if (marriage === "Yes") {
-      score += 25;
-    }
-
-    let level = "";
-    let color = "";
-
-    if (score >= 70) {
-      level = "HIGH RISK";
-      color = "red";
-      high++;
-    } else if (score >= 40) {
-      level = "MEDIUM RISK";
-      color = "orange";
-      medium++;
-    } else {
-      level = "LOW RISK";
-      color = "green";
-      low++;
-    }
-
-    total++;
-
-    document.getElementById("total").innerText = total;
-    document.getElementById("high").innerText = high;
-    document.getElementById("medium").innerText = medium;
-    document.getElementById("low").innerText = low;
-
-    let resultBox = document.getElementById("result");
-    resultBox.style.display = "block";
-    resultBox.style.borderLeftColor = color;
-    resultBox.innerHTML = `
-      <h3 style="color:${color};">${level}</h3>
-      <p>Risk Score: ${score}/100</p>
-      <p>Recommendation: Provide counseling, scholarship support, transport help, and family awareness if needed.</p>
-    `;
-  }
+buildTable();
+buildInsights();
+updateVillages();
 </script>
 
-</body>
-</html>
+
+
